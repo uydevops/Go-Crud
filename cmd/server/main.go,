@@ -1,0 +1,23 @@
+package main
+
+import (
+    "log"
+    "myapp/internal/config"
+    "myapp/internal/db"
+    "myapp/internal/handlers"
+    "myapp/pkg/server"
+)
+
+func main() {
+    // Konfigürasyonları yükle
+    cfg := config.LoadConfig()
+
+    // Veritabanı bağlantısını başlat
+    db.InitDB(cfg.DatabaseDSN)
+    defer db.Close()
+
+    // HTTP sunucusunu başlat
+    srv := server.NewServer(cfg)
+    log.Println("Sunucu çalışıyor...")
+    log.Fatal(srv.ListenAndServe())
+}
